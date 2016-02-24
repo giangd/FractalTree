@@ -38,7 +38,7 @@ class NiceColor {
   int max = 255;
   float minimum = .75;
   float maximum = 1.5;
-  boolean random;
+  boolean r; //short for random
   
   boolean goBack = false;
 
@@ -50,10 +50,10 @@ class NiceColor {
     this.rate = rate;
   }
 
-  NiceColor(float val, float rate, boolean random) {
+  NiceColor(float val, float rate, boolean r) {
     this.val = val;
     this.rate = rate;
-    this.random = random;
+    this.r = r;
   }
 
   void changeVal() {
@@ -71,11 +71,11 @@ class NiceColor {
   void maxVal() {
     if (val >= max) {
       goBack = true;
-      if (random)
+      if (r)
         rate = random(minimum, maximum);
     } else if (val <= 0) {
       goBack = false;
-      if (random)
+      if (r)
         rate = random(minimum, maximum);
     }
   }
@@ -93,17 +93,17 @@ class NiceColor {
 class Colors {
   NiceColor[] rgb = new NiceColor[3];
 
-  Colors(int startingVal, int startingRate, boolean random) {
+  Colors(int startingVal, int startingRate, boolean r) {
     // rgb = {new NiceColor(startingVal, startingRate, random), new NiceColor(startingVal, startingRate, random), new NiceColor(startingVal, startingRate, random)}; //doesnt work?
 
     for (int i = 0; i < 3; i++) {
-      rgb[i] = new NiceColor(startingVal, startingRate, random);
+      rgb[i] = new NiceColor(startingVal, startingRate, r);
     }
   }
 
-  Colors(boolean random) {
+  Colors(boolean r) {
     for (int i = 0; i < 3; i++) {
-      rgb[i] = new NiceColor((float)(Math.random()*256), 1.5, random);
+      rgb[i] = new NiceColor((float)(Math.random()*256), 1.5, r);
     }
   }
 
