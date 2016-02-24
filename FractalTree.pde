@@ -1,13 +1,17 @@
 private double fractionLength = .8; 
 private int smallestBranch = 1; 
 private double branchAngle = .4;  
+Colors c;
+
 public void setup() {   
-	size(640,480);    
+	size(640,480);
+	c = new Colors(true);    
 	// noLoop(); 
 } 
-public void draw() {   
-	background(0);   
-	stroke(0,255,0);   
+public void draw() { 
+	c.run();
+	background(c.getDifferentColor());     
+	stroke(c.getColor());   
 	line(320,480,320,380);   
 	drawBranches(320,380,100,3*Math.PI/2);
 } 
@@ -29,3 +33,91 @@ public void drawBranches(int x,int y, double branchLength, double angle) {
 	}
 } 
 
+class NiceColor {
+  float x, y, w, val, rate;
+  int max = 255;
+  float minimum = .75;
+  float maximum = 1.5;
+  boolean random;
+  
+  boolean goBack = false;
+
+  NiceColor(float x, float y, float w, float val, float rate) {
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.val= val;
+    this.rate = rate;
+  }
+
+  NiceColor(float val, float rate, boolean random) {
+    this.val = val;
+    this.rate = rate;
+    this.random = random;
+  }
+
+  void changeVal() {
+    if (goBack) {
+      val -= rate;
+    } else {
+      val += rate;
+    }
+  }
+
+  float getVal() {
+    return val;
+  }
+
+  void maxVal() {
+    if (val >= max) {
+      goBack = true;
+      if (random)
+        rate = random(minimum, maximum);
+    } else if (val <= 0) {
+      goBack = false;
+      if (random)
+        rate = random(minimum, maximum);
+    }
+  }
+
+  void display() {
+    rect(x, y, w, -val);
+  }
+
+  void run() { //changes color doesnt display graph
+    changeVal();
+    maxVal();
+  }
+}
+
+class Colors {
+  NiceColor[] rgb = new NiceColor[3];
+
+  Colors(int startingVal, int startingRate, boolean random) {
+    // rgb = {new NiceColor(startingVal, startingRate, random), new NiceColor(startingVal, startingRate, random), new NiceColor(startingVal, startingRate, random)}; //doesnt work?
+
+    for (int i = 0; i < 3; i++) {
+      rgb[i] = new NiceColor(startingVal, startingRate, random);
+    }
+  }
+
+  Colors(boolean random) {
+    for (int i = 0; i < 3; i++) {
+      rgb[i] = new NiceColor((float)(Math.random()*256), 1.5, random);
+    }
+  }
+
+  void run() {
+    for (NiceColor c : rgb) {
+      c.run();
+    }
+  }
+
+  color getColor() {
+    return color(rgb[0].getVal(), rgb[1].getVal(), rgb[2].getVal());
+  }
+
+  color getDifferentColor() {
+    return color(rgb[1].getVal(), rgb[2].getVal(), rgb[0].getVal());
+  }
+}
